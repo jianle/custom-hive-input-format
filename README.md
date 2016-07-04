@@ -1,4 +1,4 @@
-User Define HiveInputFormat
+Custom HiveInputFormat
 ===========================
 
 文件通过snappy解压后格式如下：
