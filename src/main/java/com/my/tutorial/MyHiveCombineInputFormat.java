@@ -1,6 +1,8 @@
 package com.my.tutorial;
 
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -23,11 +25,19 @@ public class MyHiveCombineInputFormat extends CombineFileInputFormat<Text, Bytes
     public InputSplit[] getSplits(JobConf job, int numSplits) throws IOException {
         InputSplit[] splits =  super.getSplits(job, numSplits);
         
-        int i = 0;
-        MyHiveInputSplit[] wsplits = new MyHiveInputSplit[splits.length];
+        List<MyHiveInputSplit> _wsplits = new ArrayList<MyHiveInputSplit>();
         for (InputSplit split : splits) {
+            if (split.getLength() < 4) { // filter empty file
+                continue;
+            }
             CombineFileSplit csplit = (CombineFileSplit) split;
-            wsplits[i++] = new MyHiveInputSplit(csplit);
+            _wsplits.add(new MyHiveInputSplit(csplit));
+        }
+        
+        int i = 0;
+        MyHiveInputSplit[] wsplits = new MyHiveInputSplit[_wsplits.size()];
+        for (MyHiveInputSplit split : _wsplits) {
+            wsplits[i++] = split;
         }
         
         for (MyHiveInputSplit _wsplit : wsplits) {
