@@ -26,6 +26,9 @@ public class MyStorageHandler implements HiveStorageHandler {
     private Configuration conf;
     
     public void setConf(Configuration conf) {
+        // support subdirectories
+        conf.set("hive.mapred.supports.subdirectories", "true");
+        conf.set("mapreduce.input.fileinputformat.input.dir.recursive", "true");
         this.conf = conf;
     }
 
